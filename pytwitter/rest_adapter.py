@@ -52,3 +52,25 @@ class RestAdapter:
 
         return self._request("POST", endpoint, params, data)
 
+    def delete(self, endpoint: str, params: dict = None, data: dict = None):
+        """
+        :param endpoint: api endpoint to fetch, e.g. 'users/by'
+        :param params: parametres for api endpoint e.g. {'usernames': 'mvlwarekekw'}
+        :param data: data to be posted to the API
+        :return: JSON-Object
+        :raise: RequestException if status code not 2xx
+        """
+
+        return self._request("DELETE", endpoint, params, data)
+
+    def put(self, endpoint: str, params: dict = None, data: dict = None):
+        """
+        :param endpoint: api endpoint to fetch, e.g. 'users/by'
+        :param params: parametres for api endpoint e.g. {'usernames': 'mvlwarekekw'}
+        :param data: data to be posted to the API
+        :return: JSON-Object
+        :raise: RequestException if status code not 2xx
+        """
+
+        return self._request("PUT", endpoint, params, data)
+
