@@ -1,7 +1,11 @@
 import requests
 import urllib3
+from json import JSONDecodeError
+
+from requests import Response
 
 from .errors import TwitterAPIException
+from .models import APIResponse
 
 
 class RestAdapter:
@@ -23,19 +27,31 @@ class RestAdapter:
 
         return r
 
-    def _request(self, method: str, endpoint: str, params: dict = None, data: dict = None):
+    def _request(self, method: str, endpoint: str, params: dict = None, data: dict = None) -> APIResponse | None:
         url = f"{self.url}{endpoint}"
 
+        status_code = 400
+
         try:
-            response = requests.request(method=method, url=url, verify=self._verify_ssl, auth=self.bearer_auth, params=params, data=data)
+            response: Response = requests.request(method=method, url=url, verify=self._verify_ssl, auth=self.bearer_auth, params=params, data=data)
+            status_code = response.status_code
         except requests.exceptions.RequestException as e:
-            raise TwitterAPIException(response.status_code, "Error occured while making request.")
+            raise TwitterAPIException(f"Request failed with code {status_code}. Error occured while making request.")
+        except Exception as e:
+            raise TwitterAPIException(f"Request failed with code {status_code}. Unknownw error occured while making request")
 
-        if 200 <= response.status_code <= 299:
-            return response.json()
-        raise TwitterAPIException(response.status_code)
+        try:
+            out_data = response.json()
+        except (ValueError, JSONDecodeError, KeyError) as e:
+            raise TwitterAPIException("Bad JSON response.") from e
 
-    def get(self, endpoint: str, params: dict = None):
+        if 200 <= status_code <= 299:
+            return APIResponse(status_code, response.reason, out_data)
+        elif status_code == 429:
+            raise TwitterAPIException(f"Too many requests.")
+        raise TwitterAPIException(f"Request failed with code {status_code}.")
+
+    def get(self, endpoint: str, params: dict = None) -> APIResponse:
         """
         :param endpoint: api endpoint to fetch, e.g. 'users/by'
         :param params: parametres for api endpoint e.g. {'usernames': 'mvlwarekekw'}
@@ -45,7 +61,7 @@ class RestAdapter:
 
         return self._request("GET", endpoint, params)
 
-    def post(self, endpoint: str, params: dict = None, data: dict = None):
+    def post(self, endpoint: str, params: dict = None, data: dict = None) -> APIResponse:
         """
         :param endpoint: api endpoint to fetch, e.g. 'users/by'
         :param params: parametres for api endpoint e.g. {'usernames': 'mvlwarekekw'}
@@ -56,7 +72,7 @@ class RestAdapter:
 
         return self._request("POST", endpoint, params, data)
 
-    def delete(self, endpoint: str, params: dict = None, data: dict = None):
+    def delete(self, endpoint: str, params: dict = None, data: dict = None) -> APIResponse:
         """
         :param endpoint: api endpoint to fetch, e.g. 'users/by'
         :param params: parametres for api endpoint e.g. {'usernames': 'mvlwarekekw'}
@@ -67,7 +83,7 @@ class RestAdapter:
 
         return self._request("DELETE", endpoint, params, data)
 
-    def put(self, endpoint: str, params: dict = None, data: dict = None):
+    def put(self, endpoint: str, params: dict = None, data: dict = None) -> APIResponse:
         """
         :param endpoint: api endpoint to fetch, e.g. 'users/by'
         :param params: parametres for api endpoint e.g. {'usernames': 'mvlwarekekw'}
