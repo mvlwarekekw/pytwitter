@@ -1,2 +1,2 @@
 from .rest_adapter import *
-from .errors import RequestException
+from .errors import TwitterAPIException

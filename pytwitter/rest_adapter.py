@@ -1,7 +1,7 @@
 import requests
 import urllib3
 
-from .errors import RequestException
+from .errors import TwitterAPIException
 
 
 class RestAdapter:
@@ -26,11 +26,14 @@ class RestAdapter:
     def _request(self, method: str, endpoint: str, params: dict = None, data: dict = None):
         url = f"{self.url}{endpoint}"
 
-        response = requests.request(method=method, url=url, verify=self._verify_ssl, auth=self.bearer_auth, params=params, data=data)
+        try:
+            response = requests.request(method=method, url=url, verify=self._verify_ssl, auth=self.bearer_auth, params=params, data=data)
+        except requests.exceptions.RequestException as e:
+            raise TwitterAPIException(response.status_code, "Error occured while making request.")
 
         if 200 <= response.status_code <= 299:
             return response.json()
-        raise RequestException(response.status_code)
+        raise TwitterAPIException(response.status_code)
 
     def get(self, endpoint: str, params: dict = None):
         """
