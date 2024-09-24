@@ -1,7 +1,8 @@
 import requests
 import urllib3
 
-from errors import RequestException
+from .errors import RequestException
+
 
 class RestAdapter:
     def __init__(self, bearer: str = "", api_ver: str = 'v1', verify_ssl: bool = True):
