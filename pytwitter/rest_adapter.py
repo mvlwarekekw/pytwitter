@@ -53,6 +53,7 @@ class RestAdapter:
         pre_log_line = f"API Request: method={method}, url={url}, params={params}"
         post_log_line = ', '.join((pre_log_line, "success={}, status_code={}, message={}"))
 
+        # API Request, catch exceptions
         try:
             self._logger.debug(msg=pre_log_line)
             response: Response = requests.request(method=method, url=url, verify=self._verify_ssl, auth=self.bearer_auth, params=params, data=data)
@@ -64,12 +65,14 @@ class RestAdapter:
             self._logger.error(msg=str(e))
             raise TwitterAPIException(f"Request failed with code {status_code}. Unknownw error occured while making request")
 
+        # Deserialize JSON response or raise error if request failed
         try:
             out_data = response.json()
         except (ValueError, JSONDecodeError, KeyError) as e:
             self._logger.error(msg=post_log_line.format(False, status_code, response.reason))
             raise TwitterAPIException("Bad JSON response.") from e
 
+        # Checked if the request returned a successful status code
         is_success = 200 <= status_code <= 299
         log_line = post_log_line.format(is_success, status_code, response.reason)
 
@@ -79,7 +82,7 @@ class RestAdapter:
         elif status_code == 429:
             raise TwitterAPIException(f"Too many requests.")
         self._logger.error(msg=log_line)
-        raise TwitterAPIException(f"Request failed with code {status_code}.")
+        raise TwitterAPIException(f"Request failed with code {status_code}. {response.json()}")
 
     def get(self, endpoint: str, params: dict = None) -> APIResponse:
         """
