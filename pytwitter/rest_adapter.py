@@ -11,10 +11,18 @@ from .models import APIResponse
 
 class RestAdapter:
     def __init__(self, bearer: str = "", api_ver: str = '2', verify_ssl: bool = True, logger: logging.Logger = None):
+        """
+        Constructor for RestAdapter
+       :param bearer: Bearer Authentication Token
+       :param api_ver: API Version, defaults to 2
+       :param verify_ssl: SSL/TLS Certificate validation, can turn off with False
+       :param logger: Logger instance, defaults to logger.logger(__name__)
+       """
         self.url = f"https://api.twitter.com/{api_ver}"
         self._logger = logger or logging.getLogger(__name__)
         self._bearer = bearer
         self._verify_ssl = verify_ssl
+        # Disable SSL/TSL Certificate validation
         if not verify_ssl:
             urllib3.disable_warnings()
 
@@ -22,7 +30,7 @@ class RestAdapter:
         """
         Bearer Authorization Method
         :param r: request object
-        :return:
+        :return: Updated request object
         """
         r.headers['Authorization'] = f"Bearer {self._bearer}"
         r.headers['User-Agent'] = 'Pytwitter v1.0'
@@ -30,6 +38,15 @@ class RestAdapter:
         return r
 
     def _request(self, method: str, endpoint: str, params: dict = None, data: dict = None) -> APIResponse | None:
+        """
+        Request method for Twitter API
+        :param method: HTTP method
+        :param endpoint: API endpoint
+        :param params: HTTP Parameters
+        :param data: Data to be sent, only needed on POST, PUT, DELETE
+
+        :return APIResponse: Returns API Response object
+        """
         url = f"{self.url}{endpoint}"
 
         status_code = 400
@@ -66,8 +83,8 @@ class RestAdapter:
 
     def get(self, endpoint: str, params: dict = None) -> APIResponse:
         """
-        :param endpoint: api endpoint to fetch, e.g. 'users/by'
-        :param params: parametres for api endpoint e.g. {'usernames': 'mvlwarekekw'}
+        :param endpoint: API Endpoint
+        :param params: Parameters e.g. {'usernames': 'mvlwarekekw'}
         :return: JSON-Object
         :raise: RequestException if status code not 2xx
         """
@@ -76,9 +93,9 @@ class RestAdapter:
 
     def post(self, endpoint: str, params: dict = None, data: dict = None) -> APIResponse:
         """
-        :param endpoint: api endpoint to fetch, e.g. 'users/by'
-        :param params: parametres for api endpoint e.g. {'usernames': 'mvlwarekekw'}
-        :param data: data to be posted to the API
+        :param endpoint: API Endpoint
+        :param params: Parameters e.g. {'usernames': 'mvlwarekekw'}
+        :param data: Data to be posted
         :return: JSON-Object
         :raise: RequestException if status code not 2xx
         """
@@ -87,9 +104,9 @@ class RestAdapter:
 
     def delete(self, endpoint: str, params: dict = None, data: dict = None) -> APIResponse:
         """
-        :param endpoint: api endpoint to fetch, e.g. 'users/by'
-        :param params: parametres for api endpoint e.g. {'usernames': 'mvlwarekekw'}
-        :param data: data to be posted to the API
+        :param endpoint: API Endpoint
+        :param params: Parameters e.g. {'usernames': 'mvlwarekekw'}
+        :param data: Data to be deleted
         :return: JSON-Object
         :raise: RequestException if status code not 2xx
         """
@@ -98,9 +115,9 @@ class RestAdapter:
 
     def put(self, endpoint: str, params: dict = None, data: dict = None) -> APIResponse:
         """
-        :param endpoint: api endpoint to fetch, e.g. 'users/by'
-        :param params: parametres for api endpoint e.g. {'usernames': 'mvlwarekekw'}
-        :param data: data to be posted to the API
+        :param endpoint: API Endpoint
+        :param params: Parameters e.g. {'usernames': 'mvlwarekekw'}
+        :param data: Data to be put
         :return: JSON-Object
         :raise: RequestException if status code not 2xx
         """
