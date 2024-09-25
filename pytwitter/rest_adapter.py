@@ -10,7 +10,7 @@ from .models import APIResponse
 
 
 class RestAdapter:
-    def __init__(self, bearer: str = "", api_ver: str = 'v1', verify_ssl: bool = True, logger: logging.Logger = None):
+    def __init__(self, bearer: str = "", api_ver: str = '2', verify_ssl: bool = True, logger: logging.Logger = None):
         self.url = f"https://api.twitter.com/{api_ver}"
         self._logger = logger or logging.getLogger(__name__)
         self._bearer = bearer
