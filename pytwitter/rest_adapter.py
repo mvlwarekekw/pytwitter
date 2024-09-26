@@ -5,7 +5,7 @@ from json import JSONDecodeError
 
 from requests import Response
 
-from .errors import TwitterAPIException
+from .exceptions import TwitterAPIException
 from .models import APIResponse
 
 

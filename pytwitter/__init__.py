@@ -1,3 +1,3 @@
 from .rest_adapter import *
-from .errors import TwitterAPIException
+from .exceptions import TwitterAPIException
 from .models import APIResponse, User
