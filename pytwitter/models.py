@@ -15,15 +15,15 @@ class User:
             id: str,
             name: str,
             username: str,
-            connection_status: list = [],
+            connection_status: list = None,
             created_at: str = '',
             description: str = '',
-            entities: dict = {},
+            entities: dict = None,
             location: str = '',
             pinned_tweet_id: str = '',
             profile_image_url: str = '',
             protected: str = '',
-            public_metrics: dict = {},
+            public_metrics: dict = None,
             url: str = '',
             verified: bool = False
     ):
@@ -49,23 +49,23 @@ class Tweet:
             id: str,
             text: str,
             edit_history_tweets: dict,
-            attachments: dict,
-            author_id: str,
-            context_annotations: list,
-            conversation_id: str,
-            created_at: str,
-            edit_controls: dict,
-            entities: dict,
-            in_reply_to_user: str,
-            lang: str,
-            non_public_metrics: dict,
-            organic_metrics: dict,
-            possibly_sensitive: bool,
-            promoted_metrics: dict,
-            public_metrics: dict,
-            referenced_tweets: list,
-            reply_settings: str,
-            withheld: dict
+            attachments: dict = None,
+            author_id: str = '',
+            context_annotations: list = None,
+            conversation_id: str = '',
+            created_at: str = '',
+            edit_controls: dict = None,
+            entities: dict = None,
+            in_reply_to_user: str = '',
+            lang: str = '',
+            non_public_metrics: dict  = None,
+            organic_metrics: dict = None,
+            possibly_sensitive: bool = False,
+            promoted_metrics: dict = None,
+            public_metrics: dict = None,
+            referenced_tweets: list = None,
+            reply_settings: str = '',
+            withheld: dict = None
     ):
         self.id = id
         self.text = text
@@ -94,17 +94,17 @@ class Media:
             self,
             media_key: str,
             type: str,
-            url: str,
-            duration_ms: int,
-            height: int,
-            non_public_metrics: dict,
-            organic_metrics: dict,
-            preview_image_url: str,
-            promoted_metrics: dict,
-            public_metrics: dict,
-            width: int,
-            alt_text: str,
-            variants: dict
+            url: str = '',
+            duration_ms: int = 0,
+            height: int = 0,
+            non_public_metrics: dict = None,
+            organic_metrics: dict = None,
+            preview_image_url: str = '',
+            promoted_metrics: dict = None,
+            public_metrics: dict = None,
+            width: int = 0,
+            alt_text: str = '',
+            variants: dict = None
     ):
         self.media_key = media_key
         self.type = type
@@ -126,9 +126,9 @@ class Poll:
             self,
             id: str,
             options: dict,
-            duration_minutes: int,
-            end_datetime: str,
-            voting_status: str
+            duration_minutes: int = 0,
+            end_datetime: str = '',
+            voting_status: str = ''
     ):
         self.id = id
         self.options = options
@@ -142,12 +142,12 @@ class Place:
             self,
             full_name: str,
             id: str,
-            contained_within: dict,
-            country: str,
-            country_code: str,
-            geo: dict,
-            name: str,
-            place_type: str
+            contained_within: dict = None,
+            country: str = '',
+            country_code: str = '',
+            geo: dict = None,
+            name: str = '',
+            place_type: str = ''
     ):
         self.full_name = full_name
         self.id = id
