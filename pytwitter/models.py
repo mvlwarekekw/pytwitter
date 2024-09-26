@@ -1,4 +1,5 @@
-import array
+import os
+import requests
 
 
 class APIResponse:
@@ -156,3 +157,24 @@ class Place:
         self.geo = geo
         self.name = name
         self.place_type = place_type
+
+
+class ProfileImage:
+    url: str
+    display_name: str
+    file_path: str
+
+    def __init__(self, url: str, display_name: str = ""):
+        self.url = url
+        self.display_name = display_name
+
+    def save(self, path: str = "./"):
+        file_path = f"{path}profile_{self.display_name}.jpg"
+        result = requests.get(self.url, stream=True)
+
+        with open(file_path, 'wb') as f:
+            f.write(result.content)
+        self.file_path = file_path
+
+    def delete(self):
+        os.remove(self.file_path)
