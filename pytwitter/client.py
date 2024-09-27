@@ -45,3 +45,29 @@ class TwitterClient:
         user = User(**result.data["data"])
 
         return user
+
+    def followers_by_user_id(self, user_id: int):
+        result = self._rest_adapter.get(
+            endpoint=f"/users/{user_id}/followers"
+        )
+
+        followers = [User(**follower) for follower in result.data]
+
+        return followers
+
+    def following_by_user_id(self, user_id: int):
+        result = self._rest_adapter.get(
+            endpoint=f"/users/{user_id}/following"
+        )
+
+        following = [User(**following) for following in result.data]
+
+        return following
+
+    def list_by_id(self, list_id: int):
+        result = self._rest_adapter.get(
+            endpoint=f"/lists/{list_id}"
+        )
+
+        return result
+
