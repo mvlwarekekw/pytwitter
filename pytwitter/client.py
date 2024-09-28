@@ -71,3 +71,20 @@ class TwitterClient:
 
         return result
 
+    def user_owned_lists(self, user_id: int):
+        result = self._rest_adapter.get(
+            endpoint=f"/users/{user_id}/owned_lists"
+        )
+
+        return result
+
+    def list_tweet_lookup(self, list_id: int):
+        result = self._rest_adapter.get(
+            endpoint=f"/lists/{list_id}/tweets"
+        )
+
+        tweets = [Tweet(**tweet) for tweet in result.data]
+
+        return tweets
+
+
