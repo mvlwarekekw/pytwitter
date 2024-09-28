@@ -1,3 +1,5 @@
 # pytwitter
 
-Python wrapper for the twitter API, development will start soon :)
+Python wrapper for the Twitter API.
+
+Development is currently paused
